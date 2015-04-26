@@ -651,10 +651,9 @@ class Model {
 
         //分析执行条件
         $condition   = $this->_parseCondition($where, $value);
-        if (!$condition['where']) {
-            return false;
+        if ($condition['where']) {
+            $condition['where'] = ltrim($condition['where'], 'WHERE ');
         }
-        $condition['where'] = ltrim($condition['where'], 'WHERE ');
 
         //获取当前的数据表名
         $tableName   = $this->getTableName();
@@ -682,10 +681,9 @@ class Model {
 
         //分析执行条件
         $condition = $this->_parseCondition($where, $value);
-        if (!$condition['where']) {
-            return false;
+        if ($condition['where']) {
+            $condition['where'] = ltrim($condition['where'], 'WHERE ');
         }
-        $condition['where'] = ltrim($condition['where'], 'WHERE ');
 
         //获取当前的数据表名
         $tableName = $this->getTableName();
@@ -788,9 +786,6 @@ class Model {
 
         //分析查询条件
         $condition = $this->_parseCondition($where, $value);
-        if (!$condition['where']) {
-            return false;
-        }
 
         //分析所要查询的字段
         $fields    = $this->_parseFields($fields);
@@ -798,7 +793,10 @@ class Model {
         //获取当前的数据表
         $tableName = $this->getTableName();
 
-        $sql = "SELECT {$fields} FROM {$tableName} {$condition['where']}";
+        $sql = "SELECT {$fields} FROM {$tableName}";
+        if ($condition['where']) {
+            $sql .= ' ' . $condition['where'];
+        }
 
         //分析数据的排序
         $orderString = $this->_parseOrder($orderDesc);
@@ -829,9 +827,6 @@ class Model {
 
         //分析查询条件
         $condition   = $this->_parseCondition($where, $value);
-        if (!$condition['where']) {
-            return false;
-        }
 
         //获取当前的数据表
         $tableName   = $this->getTableName();
@@ -840,7 +835,10 @@ class Model {
         $fields      = $this->_parseFields($fields);
 
         //组装SQL语句
-        $sql = "SELECT {$fields} FROM {$tableName} {$condition['where']}";
+        $sql = "SELECT {$fields} FROM {$tableName}";
+        if ($condition['where']) {
+            $sql .= ' ' . $condition['where'];
+        }
 
         //分析数据的排序
         $orderString = $this->_parseOrder($orderDesc);

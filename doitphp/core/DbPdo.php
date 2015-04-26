@@ -701,10 +701,10 @@ class DbPdo {
      *
      * @return boolean
      */
-    public function update($tableName, $data, $where, $value = array()) {
+    public function update($tableName, $data, $where = null, $value = array()) {
 
         //参数分析
-        if(!$tableName ||!$where || !$data || !is_array($data)) {
+        if(!$tableName || !$data || !is_array($data)) {
             return false;
         }
 
@@ -722,7 +722,10 @@ class DbPdo {
         }
 
         //组装SQL语句
-        $sql = "UPDATE {$tableName} SET {$contentString} WHERE {$where}";
+        $sql = "UPDATE {$tableName} SET {$contentString}";
+        if ($where) {
+            $sql .= " WHERE {$where}";
+        }
 
         $reulst = $this->execute($sql, $params);
 
@@ -743,10 +746,10 @@ class DbPdo {
      *
      * @return boolean
      */
-    public function delete($tableName, $where, $value = array()) {
+    public function delete($tableName, $where = null, $value = array()) {
 
         //参数分析
-        if(!$tableName ||!$where) {
+        if(!$tableName) {
             return false;
         }
         if ($value && !is_array($value)) {
@@ -754,7 +757,10 @@ class DbPdo {
         }
 
         //组装SQL语句
-        $sql = "DELETE FROM {$tableName} WHERE {$where}";
+        $sql = "DELETE FROM {$tableName}";
+        if ($where) {
+            $sql .= " WHERE {$where}";
+        }
 
         return $this->execute($sql, $value);
     }
