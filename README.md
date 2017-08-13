@@ -1,20 +1,31 @@
-#DoitPHP 标准版 V3.0
+DoitPHP 标准版 V3.0
+=============================
+感谢您选用DoitPHP, 这是一个简单易用,运行高效,易于扩展的轻量级PHP框架
 
-注：DoitPHP 标准版 V3.0 由DoitPHP 标准版V2.3演变而来，全部使用命名空间。所以运行V3.0的最低PHP版本要求为PHP 5.3.1。
+[![Build Status](http://www.doitphp.com/assets/images/doitphp_friendlink_logo.jpg)](http://www.doitphp.com)
+
+环境要求
+------------
+基本要求：web服务器运行的PHP版为5.3.0或更高，支持SPL(PHP标准库)。
 
 
-DoitPHP(原Tommyframework)是一个基于BSD开源协议发布的轻量级PHP框架。简而言之：DoitPHP运行高效，易学易用，易于扩展。换而言之：DoitPHP运行高效而不失功能强大，操作灵活而又能扩展自如。作为PHP框架里的“后起之秀”，DoitPHP秉承了那些优秀的PHP框架所共有的：代码的OOP编写风格、URL的路由功能、MVC的架构思想、UID的数据库操作、以及AJAX的前端页面技术支持。并在操作和功能设计上进行了微创新：
+安装
+------------
+1.将doitphp的压缩包解压后,在解压后的文件内你会看到以下文件和目录
 
-一、DoitPHP的辅助开发工具(DoitPHP Tools)，其强大的“脚手架”功能，使得利用本框架进行程序开发更加容易。
+		index.php		  项目入口文件
+		doitphp/		  DoitPHP框架的源文件
+		application/	  项目应用目录
+		assets/		  静态文件存放目录
+		cache/		  缓存文件存放目录
+		logs/		  运行日志文件存放目录
+		LICENSE               doitphp的许可证
 
-二、简明高效的视图运行机制，使视图文件的开发操作变得简单易行。
 
-三、灵活的扩展模块(extension)设计，能够非常容易地调用如：SMARTY、CKEDITOR、TINYEDITOR、FPDF、PHPMAILER、PHPRPC等第三方开源程序。
+2.如果想更快速的开发项目代码，请另行下载DoitPHP Tools v3.0来辅助开发。
 
-四、集成了JQUERY及JQUERY FORM、LAZYLOAD等JQUERY插件，使前端页面开发中实现AJAX LOADING图片加载效果、CHECKBOX的全选或反选效果以及图片的惰性加载效果等，让其变得得心应手。
-
-五、提供了PHP程序开发中常用的操作类库，无论是COOKIE、SESSION的操作，还是实现网页页面的分页效果，生成RAR、EXCEL、PDF等文件类型的文件，实现MEMCACH、XCACHE、APC等常见的缓存操作。利用扩展类库进行操作，如同“信手拈来”。
-
-六、丰富的数据库驱动，支持MYSQL、POSTGRESQL、ORACLE、SQLITE、MSSQL、MONGODB、REDIS等数据库。
-
-      官方网址：http://www.doitphp.com/
+官方网址：
+------------
+如果想获取更多关于DoitPHP的信息，或查看使用文档请访问官方网址。
+	
+	http://www.doitphp.com/
