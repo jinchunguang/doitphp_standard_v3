@@ -44,7 +44,7 @@ abstract class AutoLoad {
             $className = substr($className, 8);
             $filePath  = DOIT_ROOT . DS . str_replace('\\', DS, $className) . '.php';
         } else {
-            $filePath = BASE_PATH . DS . ((strpos($className, '\\') !== false) ? str_replace(array('\\', '_'), DS, $className) : str_replace('_', DS, $className)) . '.php';
+            $filePath = BASE_PATH . DS . ((strpos($className, '\\') !== false) ? str_replace('\\', DS, $className) : $className) . '.php';
             if (!is_file($filePath)) {
                 //根据配置文件设置,加载文件
                 if (self::_loadImportConfigFile($className)) {
@@ -88,7 +88,7 @@ abstract class AutoLoad {
                 if (strpos($rules, '*') !== false) {
                     $filePath = str_replace('*', $className, $rules);
                 } else {
-                    $filePath = $rules . DS . str_replace('_', DS, $className) . '.php';
+                    $filePath = $rules . DS . $className . '.php';
                 }
 
                 //当自定义自动加载的文件存在时
