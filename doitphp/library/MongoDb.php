@@ -14,7 +14,8 @@
  */
 namespace doitphp\library;
 
-use \Exception;
+use \MongoException;
+use \Mongo;
 use doitphp\core\Configure;
 use doitphp\core\Response;
 use doitphp\core\DoitException;
@@ -97,7 +98,7 @@ class MongoDb {
             }
 
             return true;
-        } catch (Exception $exception) {
+        } catch (MongoException $exception) {
 
             //抛出异常信息
             throw new DoitException('MongoDb connect error!<br>' . $exception->getMessage(), $exception->getCode());

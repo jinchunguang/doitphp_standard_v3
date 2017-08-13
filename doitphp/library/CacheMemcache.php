@@ -16,6 +16,7 @@ namespace doitphp\library;
 
 use doitphp\core\Configure;
 use doitphp\core\Response;
+use \Memcache;
 
 if (!defined('IN_DOIT')) {
     exit();
