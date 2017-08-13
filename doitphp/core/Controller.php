@@ -6,14 +6,13 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Controller.php 3.0 2014-12-01 23:12:30Z tommy <tommy@doitphp.com> $
+ * @version $Id: Controller.php 2.0 2012-12-01 23:12:30Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
 namespace doitphp\core;
 
-use doitphp\Doit;
-use doitphp\library;
+use doitphp\App;
 
 if (!defined('IN_DOIT')) {
     exit();
@@ -74,8 +73,8 @@ abstract class Controller {
      * @access public
      *
      * @param string $key 所要获取$_GET的参数名
-     * @param mixed $default 默认参数, 注:只有$string不为数组时有效
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param mixed $default 默认参数, 注:只有$key不为数组时才有效
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -92,8 +91,8 @@ abstract class Controller {
      * @access public
      *
      * @param string $key 所要获取$_POST的参数名称
-     * @param mixed $default 默认参数, 注:只有$string不为数组时有效
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param mixed $default 默认参数, 注:只有$key不为数组时才有效
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -110,8 +109,8 @@ abstract class Controller {
      * @access public
      *
      * @param string $key 所要获取的参数名称
-     * @param mixed $default 默认参数, 注:只有$string不为数组时有效
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param mixed $default 默认参数, 注:只有$key不为数组时才有效
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -127,7 +126,7 @@ abstract class Controller {
      *
      * @param string $key 参数键值, 注:不支持数组
      * @param mixed $default 默认参数值
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -148,7 +147,7 @@ abstract class Controller {
      */
     public function getCookie($cookieName = null, $default = null) {
 
-        return $this->cookie->get($cookieName, $default);
+        return $this->instance('Cookie')->get($cookieName, $default);
     }
 
     /**
@@ -166,7 +165,65 @@ abstract class Controller {
      */
     public function setCookie($cookieName, $value, $expire = null, $path = null, $domain = null) {
 
-        return $this->cookie->set($cookieName, $value, $expire, $path, $domain);
+        return $this->instance('Cookie')->set($cookieName, $value, $expire, $path, $domain);
+    }
+
+    /**
+     * 删除某cookie变量的值
+     *
+     * @access public
+     *
+     * @param string $cookieName cookie变量名
+     *
+     * @return boolean
+     */
+    public function deleteCookie($cookieName) {
+
+        return $this->instance('Cookie')->delete($cookieName);
+    }
+
+    /**
+     * 获取某session变量的值
+     *
+     * @access public
+     *
+     * @param string $sessionName session变量名
+     * @param mixed $default 默认值
+     *
+     * @return mixed
+     */
+    public function getSession($sessionName = null, $default = null) {
+
+        return $this->instance('Session')->get($sessionName, $default);
+    }
+
+    /**
+     * 设置某session变量的值
+     *
+     * @access public
+     *
+     * @param string $sessionName session的变量名
+     * @param mixed $value session值
+     *
+     * @return boolean
+     */
+    public function setSession($sessionName, $value = null) {
+
+        return $this->instance('Session')->set($sessionName, $value);
+    }
+
+    /**
+     * 删除某session变量的值
+     *
+     * @access public
+     *
+     * @param string $sessionName session变量名
+     *
+     * @return boolean
+     */
+    public function deleteSession($sessionName) {
+
+        return $this->instance('Session')->delete($sessionName);
     }
 
     /**
@@ -177,31 +234,14 @@ abstract class Controller {
      * @access public
      *
      * @param string $message 所要显示的提示信息
-     * @param string $gotoUrl 所要跳转的自定义网址
-     * @param integer $limitTime 显示信息的有效期,注:(单位:秒) 默认为3秒
+     * @param string $targetUrl 所要跳转的自定义网址
+     * @param integer $holdTime 显示信息的有效期,注:(单位:秒) 默认为3秒
      *
      * @return string
      */
-    public static function showMsg($message, $gotoUrl = null, $limitTime = 3) {
+    public static function showMsg($message, $targetUrl = null, $holdTime = 3) {
 
-        return Response::showMsg($message, $gotoUrl, $limitTime);
-    }
-
-    /**
-     * 用于显示错误信息
-     *
-     * 若调试模式关闭时(即:DOIT_DEBUG为false时)，则将错误信息并写入日志
-     *
-     * @access public
-     *
-     * @param string $message 所要显示的错误信息
-     * @param string $level 日志类型. 默认为Error. 参数：Warning, Error, Notice
-     *
-     * @return string
-     */
-    public static function halt($message, $level = 'Normal') {
-
-        return Response::halt($message, $level);
+        return Response::showMsg($message, $targetUrl, $holdTime);
     }
 
     /**
@@ -253,12 +293,12 @@ abstract class Controller {
     /**
      * 网址(URL)组装操作
      *
-     * 注：组装绝对路径的URL
+     * 注:组装绝对路径的URL
      *
      * @access public
      *
-     * @param string $route controller与action。例：controllerName/actionName
-     * @param array $params URL路由其它字段。注：url的参数信息
+     * @param string $route controller与action。例:controllerName/actionName
+     * @param array $params URL路由其它字段。注:url的参数信息
      *
      * @return string
      */
@@ -270,18 +310,18 @@ abstract class Controller {
     /**
      * 获取当前运行的Action的URL
      *
-     * 获取当前Action的URL. 注:该网址由当前的控制器(Controller)及动作(Action)组成。注：支持参数信息
+     * 获取当前Action的URL. 注:该网址由当前的控制器(Controller)及动作(Action)组成。注:支持参数信息
      *
      * @access public
      *
-     * @param array $params url路由其它字段。注：url的参数信息
+     * @param array $params url路由其它字段。注:url的参数信息
      *
      * @return string
      */
     public static function getSelfUrl($params = array()) {
 
         //分析当前的路由信息
-        $route = Doit::getControllerName() . URL_SEGEMENTATION . Doit::getActionName();
+        $route = App::getControllerName() . URL_SEGEMENTATION . App::getActionName();
 
         return self::createUrl($route, $params);
     }
@@ -289,12 +329,12 @@ abstract class Controller {
     /**
      * 获取当前Controller内的某Action的url
      *
-     * 获取当前控制器(Controller)内的动作(Action)的url。 注：该网址仅由项目入口文件和控制器(Controller)组成，支持其它参数信息
+     * 获取当前控制器(Controller)内的动作(Action)的url。 注:该网址仅由项目入口文件和控制器(Controller)组成，支持其它参数信息
      *
      * @access public
      *
      * @param string $actionName 所要获取url的action的名称
-     * @param array $params url路由其它字段。注：url的参数信息
+     * @param array $params url路由其它字段。注:url的参数信息
      *
      * @return string
      */
@@ -306,7 +346,7 @@ abstract class Controller {
         }
 
         //分析当前的路由信息
-        $route = Doit::getControllerName() . URL_SEGEMENTATION . $actionName;
+        $route = App::getControllerName() . URL_SEGEMENTATION . $actionName;
 
         return self::createUrl($route, $params);
     }
@@ -353,7 +393,7 @@ abstract class Controller {
      */
     public static function getServerName() {
 
-        return Request::serverName();
+        return Request::getServerName();
     }
 
     /**
@@ -364,7 +404,7 @@ abstract class Controller {
      */
     public static function getClientIp() {
 
-        return Request::clientIp();
+        return Request::getClientIp();
     }
 
     /**
@@ -384,8 +424,16 @@ abstract class Controller {
         if (!$className) {
             return false;
         }
+        $className = trim($className);
 
-        return Doit::singleton($className);
+        $libraryArray = array('Cookie', 'Session', 'Pagination', 'Captcha', 'Image', 'Validation', 'Curl', 'File', 'Text', 'CacheRedis', 'CacheMemcache', 'CacheMemcached', 'CacheFile', 'Html', 'Client', 'FileDownload', 'FileUpload', 'Tree', 'MongoDb', 'Csv', 'Excel', 'Language', 'Encrypt', 'Security', 'Pinyin', 'Calendar', 'HttpResponse', 'Ftp', 'Benchmark');
+        if (strpos($className, '\\') === false && in_array($className, $libraryArray)) {
+            $className = 'doitphp\library\\' . $className;
+        } else {
+            $className = 'library\\' . $className;
+        }
+
+        return App::singleton($className);
     }
 
     /**
@@ -407,15 +455,15 @@ abstract class Controller {
         }
 
         //分析model名
-        $modelName = 'models.' . trim($modelName) . 'Model';
+        $modelName = 'models\\' . trim($modelName);
 
-        return Doit::singleton($modelName);
+        return App::singleton($modelName);
     }
 
     /**
      * 加载并单例模式实例化扩展插件
      *
-     * 注：这里所调用的扩展插件存放在extension目录里的子目录中。如：当加参数为demo,则子目录为名demo
+     * 注:这里所调用的扩展插件存放在extension目录里的子目录中。如:当加参数为demo,则子目录为名demo
      * ext是extension简写
      *
      * @access public
@@ -440,18 +488,18 @@ abstract class Controller {
      * 相当于inclue_once()
      *
      * @example
-     * 例一：
+     * 例一:
      * $this->import('snoopy.php');
      *
-     * 例二：
+     * 例二:
      * $this->import(BASE_PATH . '/extensions/editer/fck.php');
      *
-     * 例三：在扩展目录(Extension)的Controller代码中加载application的library目录里的文件:snoopy.php
+     * 例三:在扩展目录(Extension)的Controller代码中加载application的library目录里的文件:snoopy.php
      * $this->import('snoopy.php', false);
      *
      * @access public
      *
-     * @param string $fileName 所要加载的文件。注：默认目录为application的子目录：library
+     * @param string $fileName 所要加载的文件。注:默认目录为application的子目录:library
      *
      * @return void
      */
@@ -474,7 +522,7 @@ abstract class Controller {
             $filePath = realpath(BASE_PATH . '/library/' . $fileName);
         }
 
-        return Doit::loadFile($filePath);
+        return App::loadFile($filePath);
     }
 
     /**
@@ -484,7 +532,7 @@ abstract class Controller {
      *
      * @access public
      *
-     * @param string $configName 所要加载的配置文件名 注：不含后缀名
+     * @param string $configName 所要加载的配置文件名 注:不含后缀名
      *
      * @return array
      */
@@ -498,7 +546,7 @@ abstract class Controller {
      *
      * @access public
      *
-     * @param string $layoutName 所要设置的layout名称。默认值为:null，即：不使用layout视图
+     * @param string $layoutName 所要设置的layout名称。默认值为:null，即:不使用layout视图
      *
      * @return boolean
      */
@@ -573,8 +621,8 @@ abstract class Controller {
         }
 
         //分析Widget名称
-        $widgetName = 'widgets.' . trim($widgetName) . 'Widget';
-        Doit::singleton($widgetName)->renderContent($params);
+        $widgetName = 'widgets\\' . trim($widgetName);
+        App::singleton($widgetName)->renderContent($params);
 
         return true;
     }
@@ -587,7 +635,7 @@ abstract class Controller {
      * @access public
      *
      * @param string $fileName 视图片段文件名称
-     * @param array $data 视图模板变量，注：数组型
+     * @param array $data 视图模板变量，注:数组型
      * @param boolean $return 视图内容是否为返回，当为true时为返回，为false时则为显示。 默认为:false
      *
      * @return string
@@ -629,7 +677,7 @@ abstract class Controller {
     /**
      * 加载视图处理类并完成视图类的实例化
      *
-     * 注：本类方法为回调类方法。通过在Controller Class的继承子类中重载本类方法，来实现自定义DoitPHP项目的视图机制的操作。
+     * 注:本类方法为回调类方法。通过在Controller Class的继承子类中重载本类方法，来实现自定义DoitPHP项目的视图机制的操作。
      *
      * @access protected
      * @return object
@@ -638,8 +686,9 @@ abstract class Controller {
 
         //分析视图类文件路径
         $filePath = DOIT_ROOT . '/core/' . ((VIEW_EXT == Configure::VIEW_EXT_PHP) ? 'View.php' : 'Template.php');
+
         //加载视图处理类文件
-        Doit::loadFile($filePath);
+        App::loadFile($filePath);
 
         //返回视图实例化对象
         return (VIEW_EXT == Configure::VIEW_EXT_PHP) ? View::getInstance() : Template::getInstance();
@@ -667,7 +716,7 @@ abstract class Controller {
      *
      * @return mixed
      */
-    protected static function _stripSlashes($data = array()) {
+    protected function _stripSlashes($data = array()) {
 
         //参数分析
         if (!$data) {
@@ -719,20 +768,8 @@ abstract class Controller {
             case 'view':
                 return $this->getView();
 
-            case 'pager':
-                return $this->instance('doitphp\library\Pagination');
-
-            case 'image':
-                return $this->instance('doitphp\library\Image');
-
-            case 'cookie':
-                return $this->instance('doitphp\library\Cookie');
-
-            case 'session':
-                return $this->instance('doitphp\library\Session');
-
             default:
-                $this->halt('Undefined property: ' . get_class($this) . '::' . $name);
+                Response::halt('Undefined property: ' . get_class($this) . '::' . $name);
         }
     }
 
@@ -752,18 +789,6 @@ abstract class Controller {
 
         switch ($method) {
 
-            case 'encode':
-                return call_user_func_array(array('doitphp\library\Html', 'encode'), $args);
-
-            case 'noCache':
-                return Response::noCache();
-
-            case 'charset':
-                return call_user_func_array(array('Response', 'charset'), $args);
-
-            case 'expires':
-                return call_user_func_array(array('Response', 'expires'), $args);
-
             case 'env':
                 return call_user_func_array(array('Request', 'env'), $args);
 
@@ -774,7 +799,7 @@ abstract class Controller {
                 return call_user_func_array(array('Request', 'files'), $args);
 
             default:
-                $this->halt('The method: ' . $method . '() is not found in ' . get_class($this) . ' class!', 'Normal');
+                Response::halt('The method: ' . $method . '() is not found in ' . get_class($this) . ' class!');
         }
     }
 }

@@ -6,7 +6,7 @@
  * @copyright Copyright (C) 2012 www.doitphp.com All rights reserved.
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Configure.php 1.0 2014-11-11 22:01:36Z tommy $
+ * @version $Id: Configure.php 1.0 2012-11-11 22:01:36Z tommy $
  * @package core
  * @since 1.0
  */
@@ -49,7 +49,7 @@ abstract class Configure {
     private static $_data = array();
 
     /**
-     * 类方法：loadConfig()调用状态。如果调用则为true，反之为false。
+     * 类方法:loadConfig()调用状态。如果调用则为true，反之为false。
      *
      * @var boolean
      */
@@ -81,9 +81,8 @@ abstract class Configure {
         if ($filePath) {
             //分析配置文件是否存在
             if (!is_file($filePath)) {
-                Controller::halt('The configuration file: ' . $filePath . ' is not found!', 'Normal');
+                Response::halt('The configuration file: ' . $filePath . ' is not found!');
             }
-
             //获取应用配置文件内容
             include_once $filePath;
 
@@ -155,7 +154,7 @@ abstract class Configure {
      *
      * @access public
      *
-     * @param string $fileName 项目配置文件名。注：不含“.php”后缀。
+     * @param string $fileName 项目配置文件名。注:不含“.php”后缀。
      *
      * @return array
      */
@@ -170,7 +169,7 @@ abstract class Configure {
             $filePath = BASE_PATH . '/config/' . $fileName . '.php';
             //判断文件是否存在
             if (!is_file($filePath)) {
-                Controller::halt('The configuration file: ' . $fileName . '.php is not exists!', 'Normal');
+                Response::halt('The configuration file: ' . $fileName . '.php is not exists!');
             }
 
             $config = array();
@@ -210,7 +209,7 @@ abstract class Configure {
         //设置路由网址的重写模式是否开启
         $defaultConfig['rewrite']             = false;
 
-        //设置路由网址格式(path：为url路由格式；get:为标准普通url格式)
+        //设置路由网址格式(path:为url路由格式；get:为标准普通url格式)
         $defaultConfig['urlFormat']           = self::PATH_FORMAT;
 
         //设置路由分割符

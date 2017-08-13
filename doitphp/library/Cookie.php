@@ -6,15 +6,16 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Cookie.php 3.0 2014-12-20 22:07:17Z tommy <tommy@doitphp.com> $
+ * @version $Id: Cookie.php 2.0 2012-12-20 22:07:17Z tommy <tommy@doitphp.com> $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\Doit;
-use doitphp\core\Controller;
+use doitphp\App;
 use doitphp\core\Configure;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -74,7 +75,7 @@ class Cookie {
         }
 
         if ($this->_options['secretkey']) {
-            $value = Doit::singleton('Encrypt')->decode($_COOKIE[$cookieName], $this->_options['secretkey']);
+            $value = App::singleton('Encrypt')->decode($_COOKIE[$cookieName], $this->_options['secretkey']);
             return unserialize($value);
         }
 
@@ -105,9 +106,9 @@ class Cookie {
         $path   = is_null($path) ? $this->_options['path'] : $path;
         $domain = is_null($domain) ? $this->_options['domain'] : $domain;
 
-        $expire = $_SERVER['REQUEST_TIME'] + $this->_options['expire'];
+        $expire = $_SERVER['REQUEST_TIME'] + $expire;
         if ($this->_options['secretkey']) {
-            $value = Doit::singleton('Encrypt')->encode(serialize($value), $this->_options['secretkey']);
+            $value = App::singleton('Encrypt')->encode(serialize($value), $this->_options['secretkey']);
         } else {
             $value = base64_encode(serialize($value));
         }

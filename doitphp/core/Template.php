@@ -8,13 +8,14 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Template.php 3.0 2014-12-16 17:32:22Z tommy <tommy@doitphp.com> $
+ * @version $Id: Template.php 2.0 2012-12-16 17:32:22Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
 namespace doitphp\core;
 
-use doitphp\Doit;
+use doitphp\App;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -135,7 +136,7 @@ class Template {
 
         //参数分析
         if (!$cacheId) {
-            $cacheId = Doit::getActionName();
+            $cacheId = App::getActionName();
         }
         if (!$expire) {
             $expire = 31536000;
@@ -218,7 +219,7 @@ class Template {
 
         //分析layout视图
         if ($this->_layout) {
-            $layoutFile   = $this->_viewPath . '/layout/' . $this->_layout . VIEW_EXT;
+            $layoutFile   = $this->_viewPath . '/layouts/' . $this->_layout . VIEW_EXT;
             $layoutStatus = is_file($layoutFile) ? true : false;
         } else {
             $layoutStatus = false;
@@ -262,13 +263,13 @@ class Template {
     /**
      * 加载并显示视图片段文件内容
      *
-     * 相当于include 代码片段，当$return为:true时返回代码代码片段内容,反之则显示代码片段内容。注：本方法不支持layout视图
+     * 相当于include 代码片段，当$return为:true时返回代码代码片段内容,反之则显示代码片段内容。注:本方法不支持layout视图
      *
      * @access public
      *
      * @param string $fileName 视图片段文件名称
-     * @param array $data 视图模板变量，注：数组型
-     * @param boolean $return 是否有返回数据。true:返回数据/false:没有返回数据，默认：false
+     * @param array $data 视图模板变量，注:数组型
+     * @param boolean $return 是否有返回数据。true:返回数据/false:没有返回数据，默认:false
      *
      * @return string
      */
@@ -352,7 +353,7 @@ class Template {
             mkdir($compileDir, 0777, true);
         }
 
-        $content = "<?php if(!defined('IN_DOIT')) exit(); use doitphp\core\Controller; ?>\n" . $content;
+        $content = "<?php if(!defined('IN_DOIT')) exit(); ?>\n" . $content;
 
         return file_put_contents($compileFile, $content, LOCK_EX);
     }
@@ -372,7 +373,7 @@ class Template {
 
         //分析视图文件是否存在
         if (!is_file($viewFile)) {
-            Controller::halt("The view file: {$viewFile} is not found!", 'Normal');
+            Response::halt("The view file: {$viewFile} is not found!");
         }
 
         $viewContent = file_get_contents($viewFile);
@@ -607,7 +608,7 @@ class Template {
      *
      * @access protected
      *
-     * @param string $fileName    视图名. 注：不带后缀
+     * @param string $fileName    视图名. 注:不带后缀
      *
      * @return string    视图文件路径
      */
@@ -643,12 +644,12 @@ class Template {
 
         //参数分析
         if (!$fileName) {
-            return Doit::getControllerName() . DS . Doit::getActionName();
+            return str_replace('_', DS, App::getControllerName()) . DS . App::getActionName();
         }
 
         $fileName = str_replace('.', '/', $fileName);
         if (strpos($fileName, '/') === false) {
-            $fileName = Doit::getControllerName() . DS . $fileName;
+            $fileName = str_replace('_', DS, App::getControllerName()) . DS . $fileName;
         }
 
         return $fileName;
@@ -712,7 +713,7 @@ class Template {
      */
     protected function _parseCacheFile($cacheId) {
 
-        return CACHE_PATH . '/htmls/' . Doit::getControllerName() . DS . md5($cacheId) . '.action.html';
+        return CACHE_PATH . '/htmls/' . str_replace('_', DS, App::getControllerName()) . DS . md5($cacheId) . '.action.html';
     }
 
     /**
@@ -731,12 +732,12 @@ class Template {
     /**
      * 网址(URL)组装操作
      *
-     * 注：组装绝对路径的URL
+     * 注:组装绝对路径的URL
      *
      * @access public
      *
-     * @param string $route controller与action。例：controllerName/actionName
-     * @param array $params URL路由其它字段。注：url的参数信息
+     * @param string $route controller与action。例:controllerName/actionName
+     * @param array $params URL路由其它字段。注:url的参数信息
      *
      * @return string
      */
@@ -753,11 +754,11 @@ class Template {
     /**
      * 获取当前运行的Action的URL
      *
-     * 获取当前Action的URL. 注:该网址由当前的控制器(Controller)及动作(Action)组成。注：支持参数信息
+     * 获取当前Action的URL. 注:该网址由当前的控制器(Controller)及动作(Action)组成。注:支持参数信息
      *
      * @access public
      *
-     * @param array $params url路由其它字段。注：url的参数信息
+     * @param array $params url路由其它字段。注:url的参数信息
      *
      * @return string
      */
@@ -769,12 +770,12 @@ class Template {
     /**
      * 获取当前Controller内的某Action的url
      *
-     * 获取当前控制器(Controller)内的动作(Action)的url。 注：该网址仅由项目入口文件和控制器(Controller)组成，支持其它参数信息
+     * 获取当前控制器(Controller)内的动作(Action)的url。 注:该网址仅由项目入口文件和控制器(Controller)组成，支持其它参数信息
      *
      * @access public
      *
      * @param string $actionName 所要获取url的action的名称
-     * @param array $params url路由其它字段。注：url的参数信息
+     * @param array $params url路由其它字段。注:url的参数信息
      *
      * @return string
      */
@@ -805,7 +806,7 @@ class Template {
     /**
      * 析构方法（函数）
      *
-     * 当本类程序运行结束后，用于打扫战场，如：清空无效的内存占用等
+     * 当本类程序运行结束后，用于打扫战场，如:清空无效的内存占用等
      *
      * @access public
      * @return boolean

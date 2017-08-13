@@ -8,14 +8,17 @@
  * @copyright Copyright (c) 2010 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: MongoDb.php 3.0 2014-12-29 21:31:01Z tommy $
+ * @version $Id: MongoDb.php 2.0 2012-12-29 21:31:01Z tommy $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
+use \Exception;
 use doitphp\core\Configure;
+use doitphp\core\Response;
+use doitphp\core\DoitException;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -34,7 +37,7 @@ class MongoDb {
      *
      * @var object
      */
-    protected $_dbLink = null;
+    protected $_dbConnection = null;
 
     /**
      * mongo实例化对象
@@ -67,7 +70,7 @@ class MongoDb {
     public function __construct($params = array()) {
 
         if (!extension_loaded('mongo')) {
-            Controller::halt('The mongo extension to be loaded!');
+            Response::halt('The mongo extension to be loaded!');
         }
 
         //参数分析
@@ -78,7 +81,7 @@ class MongoDb {
 
         $params = is_array($params) ? $params + $this->_defaultConfig : $this->_defaultConfig;
         if (!isset($params['dbname']) || !$params['dbname']) {
-            Controller::halt('The file of MongoDB config is error, dbname is not found!');
+            Response::halt('The file of MongoDB config is error, dbname is not found!');
         }
 
         try {
@@ -86,18 +89,18 @@ class MongoDb {
             $this->_mongo = new Mongo($params['dsn'], $params['option']);
 
             //连接mongo数据库
-            $this->_dbLink = $this->_mongo->selectDB($params['dbname']);
+            $this->_dbConnection = $this->_mongo->selectDB($params['dbname']);
 
             //用户登录
             if (isset($params['username']) && isset($params['password'])) {
-                $this->_dbLink->authenticate($params['username'], $params['password']);
+                $this->_dbConnection->authenticate($params['username'], $params['password']);
             }
 
             return true;
         } catch (Exception $exception) {
 
             //抛出异常信息
-            throw new DoitException('MongoDb connect error!<br/>' . $exception->getMessage(), $exception->getCode());
+            throw new DoitException('MongoDb connect error!<br>' . $exception->getMessage(), $exception->getCode());
         }
     }
 
@@ -114,7 +117,7 @@ class MongoDb {
      */
     public function collection($collection) {
 
-        return $this->_dbLink->selectCollection($collection);
+        return $this->_dbConnection->selectCollection($collection);
     }
 
     /**
@@ -251,7 +254,7 @@ class MongoDb {
      */
     public function gridFS($prefix = 'fs')
     {
-        return $this->_dbLink->getGridFS($prefix);
+        return $this->_dbConnection->getGridFS($prefix);
     }
 
     /**
@@ -265,8 +268,8 @@ class MongoDb {
      */
     public function __destruct() {
 
-        if ($this->_dbLink) {
-            $this->_dbLink = null;
+        if ($this->_dbConnection) {
+            $this->_dbConnection = null;
         }
 
         if ($this->_mongo) {

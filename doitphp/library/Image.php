@@ -8,13 +8,14 @@
  * @copyright Copyright (c) 2010 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Image.php 3.0 2014-12-23 10:40:01Z tommy $
+ * @version $Id: Image.php 2.0 2012-12-23 10:40:01Z tommy $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -26,7 +27,7 @@ class Image {
      *
      * @var string
      */
-    protected $_imageUrl;
+    protected $_imagePath;
 
     /**
      * 字体名称
@@ -282,7 +283,7 @@ class Image {
     }
 
     /**
-     * 水印图片的URL.
+     * 水印图片的路径.
      *
      * @access public
      *
@@ -290,10 +291,10 @@ class Image {
      *
      * @return object
      */
-    public function setImageUrl($url) {
+    public function setWatermarkImage($imagePath) {
 
-        if ($url) {
-            $this->_imageUrl = $url;
+        if ($imagePath) {
+            $this->_imagePath = $imagePath;
         }
 
         return $this;
@@ -415,7 +416,7 @@ class Image {
 
         if (!$this->_fontX || !$this->_fontY) {
             if (!$this->_textContent) {
-                Controller::halt('You do not set the watermark text on image!');
+                Response::halt('You do not set the watermark text on image!');
             }
 
             $bbox = imagettfbbox($this->_fontSize, 0, $this->_fontName, $this->_textContent);
@@ -464,7 +465,7 @@ class Image {
 
         //当没有所生成的图片的宽度和高度设置时.
         if (!$this->_width || !$this->_height) {
-            Controller::halt('You do not set the image height size or width size!');
+            Response::halt('You do not set the image height size or width size!');
         }
 
         $perW = $this->_width/$this->_imageWidth;
@@ -491,7 +492,7 @@ class Image {
      *
      * @return boolean
      */
-    public function makeLimitImage($url, $distName = null) {
+    public function makeThumbnail($url, $distName = null) {
 
         //参数分析
         if (!$url) {
@@ -648,26 +649,26 @@ class Image {
 
         if ($this->_image && !$this->_waterImage) {
 
-            $waterUrl = (!$this->_imageUrl) ? DOIT_ROOT . '/views/source/watermark' . '.' . $this->_type : $this->_imageUrl;
+            $imagePath = (!$this->_imagePath) ? DOIT_ROOT . '/views/source/watermark' . '.' . $this->_type : $this->_imagePath;
 
-            list($this->_waterWidth, $this->_waterHeight, $type) = getimagesize($waterUrl);
+            list($this->_waterWidth, $this->_waterHeight, $type) = getimagesize($imagePath);
 
             switch ($type) {
 
                 case 1:
-                    $this->_waterImage = imagecreatefromgif ($waterUrl);
+                    $this->_waterImage = imagecreatefromgif ($imagePath);
                     break;
 
                 case 2:
-                    $this->_waterImage = imagecreatefromjpeg($waterUrl);
+                    $this->_waterImage = imagecreatefromjpeg($imagePath);
                     break;
 
                 case 3:
-                    $this->_waterImage = imagecreatefrompng($waterUrl);
+                    $this->_waterImage = imagecreatefrompng($imagePath);
                     break;
 
                 case 4:
-                    $this->_waterImage = imagecreatefromwbmp($waterUrl);
+                    $this->_waterImage = imagecreatefromwbmp($imagePath);
                     break;
             }
         }

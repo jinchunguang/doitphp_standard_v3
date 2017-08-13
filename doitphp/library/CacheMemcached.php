@@ -1,21 +1,20 @@
 <?php
 /**
- * Memcache 缓存操作类
- *
- * 注:部分代码参考了Qeephp 2.1 memecached.php代码
+ * Memcached 缓存操作类
  *
  * @author tommy <tommy@doitphp.com>
- * @copyright Copyright (c) 2010 Tommy Software Studio
+ * @copyright Copyright (c) 2015 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Cache_Memcache.php 3.0 2014-12-30 18:00:01Z tommy $
+ * @version $Id: Cache_Memcached.php 2.0 2015-04-01 15:00:01Z tommy $
  * @package cache
  * @since 1.0
  */
-namespace doitphp\library\cache;
+namespace doitphp\library;
 
-use doitphp\core\Controller;
 use doitphp\core\Configure;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -41,11 +40,11 @@ if (!defined('IN_DOIT')) {
  * 实例化
  *
  * 法一:
- * $memcache = new Cache_Memcache($memOptions);
+ * $memcached = new Cache_Memcached($memOptions);
  *
  */
 
-class Cache_Memcache {
+class CacheMemcached {
 
     /**
      * 单例模式实例化本类
@@ -59,7 +58,7 @@ class Cache_Memcache {
      *
      * @var objeact
      */
-    private $_Memcache;
+    private $_Memcached;
 
     /**
      * 默认的缓存服务器
@@ -120,14 +119,14 @@ class Cache_Memcache {
      */
     public function __construct($options = null) {
 
-        //分析memcache扩展模块的加载
-        if (!extension_loaded('memcache')) {
-            Controller::halt('The memcache extension to be loaded before use!');
+        //分析memcached扩展模块的加载
+        if (!extension_loaded('memcached')) {
+            Response::halt('The memcached extension to be loaded before use!');
         }
 
         //获取Memcache服务器连接参数
         if (!$options || !is_array($options)) {
-            $options = Configure::get('memcache');
+            $options = Configure::get('memcached');
         }
 
         if (is_array($options) && $options) {
@@ -138,11 +137,11 @@ class Cache_Memcache {
             $this->_defaultOptions['servers'][] = $this->_defaultServer;
         }
 
-        $this->_Memcache = new Memcache();
+        $this->_Memcached = new Memcached();
 
         foreach ($this->_defaultOptions['servers'] as $server) {
             $server += array('host' => '127.0.0.1', 'port' => 11211, 'persistent' => true);
-            $this->_Memcache->addServer($server['host'], $server['port'], $this->_defaultOptions['persistent']);
+            $this->_Memcached->addServer($server['host'], $server['port'], $this->_defaultOptions['persistent']);
         }
 
         return true;
@@ -169,7 +168,7 @@ class Cache_Memcache {
             $expire = $this->_defaultOptions['expire'];
         }
 
-        return $this->_Memcache->set($key, $data, (!$this->_defaultOptions['compressed']) ? 0 : MEMCACHE_COMPRESSED, $expire);
+        return $this->_Memcached->set($key, $data, $expire);
     }
 
     /**
@@ -188,7 +187,7 @@ class Cache_Memcache {
             return false;
         }
 
-        return $this->_Memcache->get($key);
+        return $this->_Memcached->get($key);
     }
 
     /**
@@ -207,7 +206,7 @@ class Cache_Memcache {
             return false;
         }
 
-        return $this->_Memcache->delete($key);
+        return $this->_Memcached->delete($key);
     }
 
     /**
@@ -228,7 +227,7 @@ class Cache_Memcache {
             return false;
         }
 
-        return $this->_Memcache->increment($key, $value);
+        return $this->_Memcached->increment($key, $value);
     }
 
     /**
@@ -248,7 +247,7 @@ class Cache_Memcache {
             return false;
         }
 
-        return $this->_Memcache->decrement($key, $value);
+        return $this->_Memcached->decrement($key, $value);
     }
 
     /**
@@ -259,7 +258,7 @@ class Cache_Memcache {
      */
      public function clear() {
 
-          return $this->_Memcache->flush();
+          return $this->_Memcached->flush();
      }
 
     /**
@@ -270,7 +269,7 @@ class Cache_Memcache {
      */
     public function getConnection() {
 
-        return $this->_Memcache;
+        return $this->_Memcached;
     }
 
      /**
@@ -281,8 +280,8 @@ class Cache_Memcache {
       */
      public function __destruct() {
 
-         if ($this->_Memcache) {
-             $this->_Memcache->close();
+         if ($this->_Memcached) {
+             $this->_Memcached->quit();
          }
 
          return true;

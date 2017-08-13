@@ -6,19 +6,20 @@
  * @copyright Copyright (c) 2010 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Cache_Redis.php 3.0 2014-12-30 19:48:01Z tommy $
+ * @version $Id: Cache_Redis.php 2.0 2012-12-30 19:48:01Z tommy $
  * @package cache
  * @since 1.0
  */
-namespace doitphp\library\cache;
+namespace doitphp\library;
 
-use doitphp\core\Controller;
 use doitphp\core\Configure;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
 
-class Cache_Redis {
+class CacheRedis {
 
     /**
      * 单例模式实例化对象
@@ -60,7 +61,7 @@ class Cache_Redis {
     public function __construct($options = null) {
 
         if (!extension_loaded('redis')) {
-            Controller::halt('The redis extension to be loaded!');
+            Response::halt('The redis extension to be loaded!');
         }
 
         //当参数为空时,程序则自动加载配置文件中数据库连接参数
@@ -75,16 +76,16 @@ class Cache_Redis {
         //连接数据库
         $this->_Redis  = new Redis();
         $connect = (!$options['persistent']) ? 'connect' : 'pconnect';
-        $return = $this->_Redis->$connect($options['host'], $options['port'], $options['expire']);
+        $linkId  = $this->_Redis->$connect($options['host'], $options['port'], $options['expire']);
 
-        if ($return && $options['password']) {
-            $return = $this->_Redis->auth($options['password']);
+        if ($linkId && $options['password']) {
+            $linkId = $this->_Redis->auth($options['password']);
         }
-        if ($return && $options['database']) {
-            $return = $this->_Redis->select($options['database']);
+        if ($linkId && $options['database']) {
+            $linkId = $this->_Redis->select($options['database']);
         }
 
-        return $return;
+        return $linkId;
     }
 
     /**

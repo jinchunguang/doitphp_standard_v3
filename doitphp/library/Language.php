@@ -6,13 +6,14 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Language.php 3.0 2014-12-22 19:41:54Z tommy <tommy@doitphp.com> $
+ * @version $Id: Language.php 2.0 2012-12-22 19:41:54Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -96,7 +97,7 @@ class Language {
         if (!isset($_langArray[$langName])) {
             //分析语言文件是否存在
             if (!is_file($langFilePath)) {
-                Controller::halt("The Langueage File: {$langFilePath} is not found!", 'Normal');
+                Response::halt("The Langueage File: {$langFilePath} is not found!");
             }
 
             //获取语言包内容

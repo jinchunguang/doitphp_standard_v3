@@ -8,13 +8,14 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Log.php 3.0 2014-11-29 23:33:00Z tommy <tommy@doitphp.com> $
+ * @version $Id: Log.php 2.0 2012-11-29 23:33:00Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
 namespace doitphp\core;
 
-use doitphp\Doit;
+use doitphp\App;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -27,7 +28,7 @@ abstract class Log {
      * @access public
      *
      * @param string $message     所要写入的日志内容
-     * @param string $level       日志类型. 参数：Warning, Error, Notice
+     * @param string $level       日志类型. 参数:Warning, Error, Notice
      * @param string $logFileName 日志文件名
      *
      * @return boolean
@@ -53,8 +54,8 @@ abstract class Log {
         }
 
         //分析记录日志的当前页面
-        $controllerId = Doit::getControllerName();
-        $actionId     = Doit::getActionName();
+        $controllerId = App::getControllerName();
+        $actionId     = App::getActionName();
 
         //分析日志内容
         $message      = "[{$controllerId}][{$actionId}]:" . $message;
@@ -109,9 +110,9 @@ abstract class Log {
      *
      * $this->_getLogFilePath('sql');
      * 或
-     * $this->_getLogFilePath('2014-11.2014-11-23');
+     * $this->_getLogFilePath('2012-11.2012-11-23');
      * 或
-     * $this->_getLogFilePath('2014-11/2014-11-23');
+     * $this->_getLogFilePath('2012-11/2012-11-23');
      *
      * @access private
      *

@@ -6,7 +6,7 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Request.php 3.0 2014-11-28 23:25:26Z tommy <tommy@doitphp.com> $
+ * @version $Id: Request.php 2.0 2012-11-28 23:25:26Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
@@ -27,7 +27,7 @@ abstract class Request {
      *
      * @param string $key 所要获取$_GET的参数名称
      * @param mixed $default 默认参数, 注:只有$string不为数组时有效
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -62,7 +62,7 @@ abstract class Request {
      *
      * @access protected
      * @param mixted $params 待转码的字符串
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      * @return string
      */
     protected static function _encode($params = null, $isEncode = true) {
@@ -93,7 +93,7 @@ abstract class Request {
      *
      * @param string $key 所要获取$_POST的参数名称
      * @param mixed $default 默认参数, 注:只有$string不为数组时有效
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -132,7 +132,7 @@ abstract class Request {
      *
      * @param string $key 所要获取的参数名称
      * @param mixed $default 默认参数, 注:只有$string不为数组时有效
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return mixed
      */
@@ -156,7 +156,7 @@ abstract class Request {
      *
      * @param string $key 参数键值, 注:不支持数组
      * @param mixed $default 默认参数值
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return string
      */
@@ -184,17 +184,17 @@ abstract class Request {
     /**
      * 获取当前运行程序的网址域名
      *
-     * 如：http://www.doitphp.com
+     * 如:http://www.doitphp.com
      *
      * @access public
      *
      * @return string    网址(域名)
      */
-    public static function serverName() {
+    public static function getServerName() {
 
         //获取网址域名部分.
         $serverName = (!$_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : strtolower($_SERVER['HTTP_HOST']);
-        $serverPort = ($_SERVER['SERVER_PORT'] == '80') ? '' : ':' . (int)$_SERVER['SERVER_PORT'];
+        $serverPort    = ($_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443') ? '' : ':' . (int)$_SERVER['SERVER_PORT'];
 
         return (self::isSecure() ? 'https://' : 'http://') . $serverName . $serverPort;
     }
@@ -220,7 +220,7 @@ abstract class Request {
      *
      * @return string
      */
-    public static function clientIp($default = '0.0.0.0') {
+    public static function getClientIp($default = '0.0.0.0') {
 
         $keys = array('HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR');
         foreach ($keys as $key) {
@@ -238,7 +238,7 @@ abstract class Request {
      *
      * @access private
      *
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return array
      */
@@ -262,7 +262,7 @@ abstract class Request {
      *
      * @access private
      *
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return array
      */
@@ -286,7 +286,7 @@ abstract class Request {
      *
      * @access private
      *
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return array
      */
@@ -306,7 +306,7 @@ abstract class Request {
      *
      * @access private
      *
-     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true：是/ false：否）
+     * @param boolean $isEncode 是否对符串进行htmlspecialchars()转码（true:是/ false:否）
      *
      * @return array
      */

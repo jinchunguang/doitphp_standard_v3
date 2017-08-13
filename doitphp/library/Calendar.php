@@ -6,7 +6,7 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Calendar.php 3.0 2014-12-30 01:28:54Z tommy <tommy@doitphp.com> $
+ * @version $Id: Calendar.php 2.0 2012-12-30 01:28:54Z tommy <tommy@doitphp.com> $
  * @package library
  * @since 1.0
  */
@@ -86,7 +86,7 @@ class Calendar {
      *
      * @access public
      *
-     * @param array $days 已占用的日期。注：本参数为数组
+     * @param array $days 已占用的日期。注:本参数为数组
      *
      * @return object
      */
@@ -140,27 +140,27 @@ class Calendar {
         $usedDayArray = (!$this->_usedDays) ? array() : array_keys($this->_usedDays);
 
         //分析日历数组
-        $data = array('year'=>$this->_year, 'month'=>$this->_month, 'content'=>array());
+        $data = array('year'=>$this->_year, 'month'=>$this->_month, 'list'=>array());
 
         for ($i = 0; $i < $totalRowNum; $i ++) {
             for($k = 0; $k < 7; $k ++) {
                 //所要显示的日期
                 $dateShow = intval( 7 * $i + $k - $dayIndex + 1);
                 if (($dateShow < 1) || ($dateShow > $totalDays)) {
-                    $data['content'][$i][$k] = array('date'=> null, 'status'=> false);
+                    $data['list'][$i][$k] = array('date'=> null, 'status'=> false);
                 } else {
                     //分析已占用的日期状态
                     $usedStatus  = in_array($dateShow, $usedDayArray) ? true : false;
                     $todayStatus = (!$usedStatus && ($dateShow == $dateNow) && ($yearNow == $this->_year && $monthNow == $this->_month)) ? true : false;
 
-                    $data['content'][$i][$k] = array('date' => $dateShow);
+                    $data['list'][$i][$k] = array('date' => $dateShow);
                     if ($usedStatus) {
-                        $data['content'][$i][$k]['status'] = 'used';
-                        $data['content'][$i][$k]['ext']   = $this->_usedDays[$dateShow];
+                        $data['list'][$i][$k]['status'] = 'used';
+                        $data['list'][$i][$k]['ext']   = $this->_usedDays[$dateShow];
                     } else if ($todayStatus) {
-                        $data['content'][$i][$k]['status'] = 'today';
+                        $data['list'][$i][$k]['status'] = 'today';
                     } else {
-                        $data['content'][$i][$k]['status'] = true;
+                        $data['list'][$i][$k]['status'] = true;
                     }
                 }
             }

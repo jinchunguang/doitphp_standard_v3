@@ -8,7 +8,7 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: WidgetTemplate.php 3.0 2014-12-16 23:12:00Z tommy <tommy@doitphp.com> $
+ * @version $Id: WidgetTemplate.php 2.0 2012-12-16 23:12:00Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
@@ -53,7 +53,7 @@ class WidgetTemplate extends Template {
     public function __construct() {
 
         //设置挂件视图模板目录的路径
-        $this->_viewPath    = BASE_PATH . '/widgets/views';
+        $this->_viewPath    = BASE_PATH . '/views/widgets';
         //设置视图编译缓存文件的默认目录路径
         $this->_compilePath = CACHE_PATH . '/views/widgets';
 
@@ -67,7 +67,7 @@ class WidgetTemplate extends Template {
      *
      * @access public
      *
-     * @param string $layoutName 所要设置的layout名称。默认值为:null，即：不使用layout视图
+     * @param string $layoutName 所要设置的layout名称。默认值为:null，即:不使用layout视图
      *
      * @return boolean
      */
@@ -79,7 +79,7 @@ class WidgetTemplate extends Template {
     /**
      * 分析并加载视图缓存
      *
-     * 注：挂件(Widget)的视图机制不支持视图缓存
+     * 注:挂件(Widget)的视图机制不支持视图缓存
      *
      * @access public
      *
@@ -101,7 +101,7 @@ class WidgetTemplate extends Template {
      * @access public
      *
      * @param string $fileName 视图片段文件名称
-     * @param array $data 视图模板变量，注：数组型
+     * @param array $data 视图模板变量，注:数组型
      * @param boolean $return 视图内容是否为返回，当为true时为返回，为false时则为显示。 默认为:false
      *
      * @return string
@@ -150,7 +150,7 @@ class WidgetTemplate extends Template {
     /**
      * 显示当前页面的视图内容
      *
-     * 注：挂件(Widget)的视图机制不支持Layout视图
+     * 注:挂件(Widget)的视图机制不支持Layout视图
      *
      * @access public
      *

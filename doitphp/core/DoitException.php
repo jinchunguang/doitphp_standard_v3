@@ -6,18 +6,20 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: DoitException.php 1.0 2014-12-04 10:56:13Z tommy <tommy@doitphp.com> $
+ * @version $Id: DoitException.php 1.0 2012-12-04 10:56:13Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
 namespace doitphp\core;
+
+use \Exception;
 
 class DoitException extends Exception {
 
     /**
      * 异常输出
      *
-     * 注：当调试模式关闭时,异常提示信息将会写入日志
+     * 注:当调试模式关闭时,异常提示信息将会写入日志
      *
      * @access public
      * @return string
@@ -27,7 +29,7 @@ class DoitException extends Exception {
         //分析获取异常信息
         $code         = $this->getCode();
         $exceptionMsg = $this->getMessage();
-        $message      = ($code ? "Error Code:{$code}<br/>" : '') . ($exceptionMsg ? "Error Message:{$exceptionMsg}" : '');
+        $message      = ($code ? "Error Code:{$code}<br>" : '') . ($exceptionMsg ? "Error Message:{$exceptionMsg}" : '');
 
         $line = $this->getLine();
         $sourceFile = $this->getFile() . (!$line ? '' : "({$line})");
@@ -40,7 +42,7 @@ class DoitException extends Exception {
                 if ($key > 2) {
                     break;
                 }
-                $traceString .= "#{$key} {$trace['file']}({$trace['line']})<br/>";
+                $traceString .= "#{$key} {$trace['file']}({$trace['line']})<br>";
             }
         }
 
@@ -54,7 +56,7 @@ class DoitException extends Exception {
         $exceptionMessage = ob_get_clean();
 
         if (DOIT_DEBUG === false) {
-            $exceptionMsg = str_replace('<br/>', ' ', $exceptionMsg);
+            $exceptionMsg = str_replace('<br>', ' ', $exceptionMsg);
             $logContent   = ((!$code) ? "" : "Error Code:{$code} ") . "Error Message:{$exceptionMsg} File:{$sourceFile}";
             //写入程序运行日志
             Log::write($logContent);

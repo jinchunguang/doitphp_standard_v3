@@ -6,13 +6,15 @@
  * @copyright  CopyRight DoitPHP team, initphp team
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Ftp.php 3.0 2014-12-23 00:05:01Z tommy $
+ * @version $Id: Ftp.php 2.0 2012-12-23 00:05:01Z tommy $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
+use doitphp\core\Response;
+use doitphp\core\DoitException;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -49,7 +51,7 @@ class Ftp {
         try {
             $this->_linkId = @ftp_connect($server, $port);
             if (!@ftp_login($this->_linkId, $username, $password)){
-                Controller::showMsg('Ftp Server 登陆失败');
+                Response::showMsg('Ftp Server 登陆失败');
             }
 
             //打开被动模拟
@@ -59,7 +61,7 @@ class Ftp {
         } catch (Exception $exception) {
 
             //抛出异常信息
-            throw new DoitException('Ftp server connect error!<br/>' . $exception->getMessage(), $exception->getCode());
+            throw new DoitException('Ftp server connect error!<br>' . $exception->getMessage(), $exception->getCode());
         }
     }
 

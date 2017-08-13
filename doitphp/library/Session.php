@@ -6,14 +6,15 @@
  * @copyright Copyright (c) 2010 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Session.php 3.0 2014-12-20 23:09:01Z tommy $
+ * @version $Id: Session.php 2.0 2012-12-20 23:09:01Z tommy $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
 use doitphp\core\Configure;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }

@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2010 Tommycode Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: HttpResponse.php 3.0 2014-12-23 21:55:01Z tommy $
+ * @version $Id: HttpResponse.php 2.0 2012-12-23 21:55:01Z tommy $
  * @package library
  * @since 1.0
  */

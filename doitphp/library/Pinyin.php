@@ -2,13 +2,13 @@
 /**
  * 将汉字转化为拼音类
  *
- * 注：支持的汉字编码为gbk,汉字也是常用的汉字,对于生僻的汉字可能无法支持
+ * 注:支持的汉字编码为gbk,汉字也是常用的汉字,对于生僻的汉字可能无法支持
  *
  * @author tommy <tommy@doitphp.com>
  * @copyright Copyright (c) 2010 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Pinyin.php 3.0 2014-12-22 21:06:01Z tommy $
+ * @version $Id: Pinyin.php 2.0 2012-12-22 21:06:01Z tommy $
  * @package library
  * @since 1.0
  */
@@ -475,11 +475,11 @@ class Pinyin {
      * @access public
      *
      * @param string $string 所要转化拼音的汉字
-     * @param boolean $utf8 汉字编码是否为utf8
+     * @param boolean $isUtf8 汉字编码是否为utf8
      *
      * @return string
      */
-    public function output($string, $utf8 = true){
+    public function output($string, $isUtf8 = true){
 
         //参数分析
         if (!$string) {
@@ -487,7 +487,7 @@ class Pinyin {
         }
 
         //编码转换.
-        $string = ($utf8 == true) ? iconv('utf-8', 'gbk', $string) : $string;
+        $string = ($isUtf8 == true) ? iconv('utf-8', 'gbk', $string) : $string;
         $num = strlen($string);
 
         $pinyin = '';
@@ -501,7 +501,7 @@ class Pinyin {
         }
 
         //输出的拼音编码转换.
-        return ($utf8==true) ? iconv('gbk', 'utf-8', $pinyin) : $pinyin;
+        return ($isUtf8==true) ? iconv('gbk', 'utf-8', $pinyin) : $pinyin;
     }
 
     /**

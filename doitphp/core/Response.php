@@ -6,7 +6,7 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Response.php 3.0 2014-11-28 00:50:27Z tommy <tommy@doitphp.com> $
+ * @version $Id: Response.php 2.0 2012-11-28 00:50:27Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
@@ -54,7 +54,7 @@ abstract class Response {
      *
      * @access public
      *
-     * @param integer $seconds 生存周期（单位：秒）
+     * @param integer $seconds 生存周期（单位:秒）
      *
      * @return boolean
      */
@@ -97,37 +97,42 @@ abstract class Response {
      * 显示提示信息操作
      *
      * 本方法支持URL的自动跳转，当显示时间有效期失效时则跳转到自定义网址，若跳转网址为空则函数不执行跳转功能，当自定义网址参数为-1时默认为:返回上一页。
-     * 注：显示提示信息的页面模板内容可以自定义. 方法：在项目视图目录中的error子目录中新建message.php文件,自定义该文件内容。
-     * 模板文件输出信息处代码参考doitphp子目录中文件：views/errors/message.php
+     * 注:显示提示信息的页面模板内容可以自定义. 方法:在项目视图目录中的error子目录中新建message.php文件,自定义该文件内容。
+     * 模板文件输出信息处代码参考doitphp子目录中文件:views/errors/message.php
      *
      * @access public
      *
      * @param string $message 所要显示的提示信息
-     * @param string $gotoUrl 所要跳转的自定义网址
-     * @param integer $limitTime 显示信息的有效期,注:(单位:秒) 默认为3秒
+     * @param string $targetUrl 所要跳转的自定义网址
+     * @param integer $holdTime 显示信息的有效期,注:(单位:秒) 默认为3秒
      *
      * @return string
      */
-    public static function showMsg($message, $gotoUrl = null, $limitTime = 3) {
+    public static function showMsg($message, $targetUrl = null, $holdTime = 3) {
 
         //参数分析
         if (!$message) {
             return false;
         }
 
+        //当为Ajax调用时
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest')) {
+            return self::ajax(false, $message);
+        }
+
         //当自定义跳转网址存在时
-        if ($gotoUrl) {
-            $limitTime    = 1000 * $limitTime;
+        if ($targetUrl) {
+            $holdTime = 1000 * $holdTime;
             //分析自定义网址是否为返回页
-            if ($gotoUrl == -1) {
-                $gotoUrl  = 'javascript:history.go(-1);';
-                $message .= '<br/><a href="javascript:history.go(-1);" target="_self">如果你的浏览器没反应,请点击这里...</a>';
+            if ($targetUrl == -1) {
+                $targetUrl = 'javascript:history.go(-1);';
+                $message  .= '<br><a href="javascript:history.go(-1);" target="_self">如果你的浏览器没反应,请点击这里...</a>';
             } else{
                 //防止网址过长，有换行引起跳转变不正确
-                $gotoUrl  = str_replace(array("\n","\r"), '', $gotoUrl);
-                $message .= '<br/><a href="' . $gotoUrl . '" target="_self">如果你的浏览器没反应,请点击这里...</a>';
+                $targetUrl = str_replace(array("\n","\r"), '', $targetUrl);
+                $message  .= '<br><a href="' . $targetUrl . '" target="_self">如果你的浏览器没反应,请点击这里...</a>';
             }
-            $message .= '<script type="text/javascript">function doitRedirectUrl(url){location.href=url;}setTimeout("doitRedirectUrl(\'' . $gotoUrl . '\')", ' . $limitTime . ');</script>';
+            $message .= '<script type="text/javascript">function redirectTargetUrl(targetUrl){location.href=targetUrl;}setTimeout("redirectTargetUrl(\'' . $targetUrl . '\')", ' . $holdTime . ');</script>';
         }
 
         $messageTemplateFile = BASE_PATH . '/views/errors/message.php';
@@ -182,17 +187,19 @@ abstract class Response {
      * 若调试模式关闭时(即:DOIT_DEBUG为false时)，则将错误信息并写入日志
      *
      * @access public
-     *
      * @param string $message 所要显示的错误信息
-     * @param string $level 日志类型. 默认为Error. 参数：Warning, Error, Notice
-     *
      * @return string
      */
-    public static function halt($message, $level = 'Normal') {
+    public static function halt($message) {
 
         //参数分析
         if (!$message) {
             return false;
+        }
+
+        //当为Ajax调用时
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest')) {
+            return self::ajax(false, $message);
         }
 
         //调试模式下优雅输出错误信息
@@ -200,23 +207,23 @@ abstract class Response {
         $traceString  = '';
         $sourceFile   = $traces[0]['file'] . '(' . $traces[0]['line'] . ')';
 
-        if (defined('DOIT_DEBUG') && DOIT_DEBUG === true && $level != 'Normal') {
+        if (defined('DOIT_DEBUG') && DOIT_DEBUG === true) {
             foreach ($traces as $key=>$trace) {
                 //代码跟踪级别限制
-                if ($key > 2) {
+                if ($key > 1) {
                     break;
                 }
                 $argsString   = ($trace['args'] && is_array($trace['args'])) ? '(' . implode('.', $trace['args']) . ')': '';
-                $traceString .= "#{$key} {$trace['file']}({$trace['line']}){$trace['class']}{$trace['type']}{$trace['function']}{$argsString}<br/>";
+                $traceString .= "#{$key} {$trace['file']}({$trace['line']}){$trace['class']}{$trace['type']}{$trace['function']}{$argsString}<br>";
             }
         }
 
         //加载,分析,并输出excepiton文件内容
         include_once DOIT_ROOT . '/views/errors/exception.php';
 
-        if (defined('DOIT_DEBUG') && DOIT_DEBUG === false && $level != 'Normal') {
+        if (defined('DOIT_DEBUG') && DOIT_DEBUG === false) {
             //写入程序运行日志
-            Log::write($message, $level);
+            Log::write($message);
         }
 
         //终止程序

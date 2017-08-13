@@ -8,13 +8,14 @@
  * @copyright Copyright (c) 2010 Tommycode Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Captcha.php 3.0 2015-4-1 1:36:01Z tommy $
+ * @version $Id: Captcha.php 2.0 2015-4-1 1:36:01Z tommy $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
+use doitphp\core\Response;
+
 if (!defined('IN_DOIT')) {
     exit();
 }
@@ -237,7 +238,7 @@ class Captcha {
      *
      * @access public
      *
-     * @param string $param 颜色参数. 如：#FF0000
+     * @param string $param 颜色参数. 如:#FF0000
      *
      * @return object
      */
@@ -263,7 +264,7 @@ class Captcha {
      *
      * @access public
      *
-     * @param string $param    颜色参数. 如：#FF0000
+     * @param string $param    颜色参数. 如:#FF0000
      *
      * @return object
      */
@@ -452,7 +453,7 @@ class Captcha {
 
         //当有headers内容输出时.
         if (headers_sent()) {
-            Controller::halt('headers already sent');
+            Response::halt('headers already sent');
         }
 
         //显示图片,根据背景图片的格式显示相应格式的图片.

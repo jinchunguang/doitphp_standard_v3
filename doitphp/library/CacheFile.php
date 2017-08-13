@@ -6,17 +6,20 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2012 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Cache_File.php 3.0 2014-12-30 21:04:41Z tommy <tommy@doitphp.com> $
+ * @version $Id: Cache_File.php 2.0 2012-12-30 21:04:41Z tommy <tommy@doitphp.com> $
  * @package cache
  * @since 1.0
  */
-namespace doitphp\library\cache;
+namespace doitphp\library;
+
+use doitphp\core\Configure;
+use doitphp\core\Response;
 
 if (!defined('IN_DOIT')) {
     exit();
 }
 
-class Cache_File {
+class CacheFile {
 
     /**
      * 单例模式实例化本类
@@ -81,7 +84,7 @@ class Cache_File {
         $filePath = $this->_parseCacheFile($key);
 
         //分析缓存内容
-        $content  = '<?php if(!defined(\'IN_DOIT\'))exit(); return array(' . $expire . ', ' . var_export($value, true) . ');';
+        $content  = "<?php\nif(!defined('IN_DOIT'))exit();\nreturn array(" . $expire . ", " . var_export($value, true) . ");";
 
         return File::writeFile($filePath, $content);
     }

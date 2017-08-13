@@ -6,13 +6,15 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: AutoLoad.php 3.0 2014-12-01 11:52:00Z tommy <tommy@doitphp.com> $
+ * @version $Id: AutoLoad.php 2.0 2012-12-01 11:52:00Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
 namespace doitphp\core;
 
-use doitphp\Doit;
+use doitphp\App;
+use doitphp\core\Configure;
+use doitphp\core\Response;
 
 if (!defined('IN_DOIT')) {
     exit();
@@ -37,7 +39,7 @@ abstract class AutoLoad {
      */
     public static function loadClass($className) {
 
-        //doitPHP核心类文件的加载分析
+        //DoitPHP核心类文件的加载分析
         if (substr($className, 0, 8) == 'doitphp\\') {
             $className = substr($className, 8);
             $filePath  = DOIT_ROOT . DS . str_replace('\\', DS, $className) . '.php';
@@ -49,11 +51,12 @@ abstract class AutoLoad {
                     return true;
                 }
                 //当文件不存在时，提示错误信息
-                Controller::halt('The File: ' . $filePath .' is not found !', 'Normal');
+                Response::halt('The File: ' . $filePath . ' is not found !');
             }
         }
 
-        Doit::loadFile($filePath);
+        App::loadFile($filePath);
+
         return true;
     }
 
@@ -91,7 +94,7 @@ abstract class AutoLoad {
                 //当自定义自动加载的文件存在时
                 if (is_file($filePath)) {
                     //加载文件
-                    Doit::loadFile($filePath);
+                    App::loadFile($filePath);
                     $atuoLoadStatus = true;
                     break;
                 }

@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2010 Tommy Software Studio
  * @link http://www.doitphp.com
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Curl.php 3.0 2014-12-22 21:45:01Z tommy $
+ * @version $Id: Curl.php 2.0 2012-12-22 21:45:01Z tommy $
  * @package library
  * @since 1.0
  */
@@ -88,13 +88,13 @@ class Curl {
      *
      * @access public
      *
-     * @param boolean $isOn 是否开启
+     * @param boolean $isTurnOn 是否开启
      *
      * @return object
      */
-    public function setCookieStatus($isOn = true) {
+    public function setCookieStatus($isTurnOn = true) {
 
-        self::$_cookieSupport = $isOn;
+        self::$_cookieSupport = $isTurnOn;
 
         return $this;
     }

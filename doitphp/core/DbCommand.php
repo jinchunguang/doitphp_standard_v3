@@ -8,7 +8,7 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: DbCommand.php 1.0 2014-12-16 00:18:24Z tommy <tommy@doitphp.com> $
+ * @version $Id: DbCommand.php 1.0 2012-12-16 00:18:24Z tommy <tommy@doitphp.com> $
  * @package core
  * @since 1.0
  */
@@ -25,7 +25,7 @@ class DbCommand {
      *
      * @var object
      */
-    protected $_dbLink = null;
+    protected $_dbConnection = null;
 
     /**
      * 数据表名的前缀
@@ -61,7 +61,7 @@ class DbCommand {
      */
     public function __construct($modelObject) {
 
-        $this->_dbLink = $modelObject->_slave();
+        $this->_dbConnection = $modelObject->_slave();
         $this->_prefix = $modelObject->_prefix;
 
         return true;
@@ -75,7 +75,7 @@ class DbCommand {
      * @access public
      *
      * @param string $method 类方法名称
-     * @param array $args 参数值。注：本参数为数组
+     * @param array $args 参数值。注:本参数为数组
      *
      * @return mixed
      */
@@ -89,7 +89,7 @@ class DbCommand {
             return call_user_func_array(array($this, '_selectByFunction'), $args);
         }
 
-        return Controller::halt("The method: {$method}() is not found in DbCommand class!", 'Normal');
+        return Response::halt("The method: {$method}() is not found in DbCommand class!");
     }
 
     /**
@@ -112,7 +112,7 @@ class DbCommand {
      *
      * @access public
      *
-     * @param mixed $tableName 所要查询的数据表名。注：本参数支持数组
+     * @param mixed $tableName 所要查询的数据表名。注:本参数支持数组
      * @param mixed $fields 所要查询的数据表字段。默认数据表全部字段
      *
      * @return object
@@ -244,7 +244,7 @@ class DbCommand {
     protected function _prepare($sql, $value) {
 
         $sql   = str_replace('?', '%s', $sql);
-        $value = $this->_dbLink->escape($value);
+        $value = $this->_dbConnection->escape($value);
 
         return vsprintf($sql, $value);
     }
@@ -310,7 +310,7 @@ class DbCommand {
      *
      * @access public
      *
-     * @param string|array $where 条件语句
+     * @param mixed $where 条件语句
      * @param string $value    数据表某字段的数据值
      *
      * @return object
@@ -336,7 +336,7 @@ class DbCommand {
      *
      * @access public
      *
-     * @param string|array $where 条件语句
+     * @param mixed $where 条件语句
      * @param string $value    数据表某字段的数据值
      *
      * @return object
@@ -395,7 +395,7 @@ class DbCommand {
      * @access public
      *
      * @param string $tableName 数据表名
-     * @param string $where join条件。注：不支持数组
+     * @param string $where join条件。注:不支持数组
      *
      * @return object
      */
@@ -479,7 +479,7 @@ class DbCommand {
     /**
      * 执行SQL语句
      *
-     * 注：用于执行查询性的SQL语句（需要数据返回的情况）。
+     * 注:用于执行查询性的SQL语句（需要数据返回的情况）。
      *
      * @access public
      * @return boolean
@@ -489,7 +489,7 @@ class DbCommand {
         //获取完整的SQL查询语句。
         $sql = $this->getSql();
 
-        return $this->_dbLink->query($sql);
+        return $this->_dbConnection->query($sql);
     }
 
     /**
@@ -522,33 +522,33 @@ class DbCommand {
     /**
      * 获取查询信息中的一行数据
      *
-     * 注：本函数(类方法)需与query()组合使用。
+     * 注:本函数(类方法)需与query()组合使用。
      *
      * @access public
      *
-     * @param string $model 返回数据的索引类型：字段型/数据型 等。默认：字段型
+     * @param string $model 返回数据的索引类型:字段型/数据型 等。默认:字段型
      *
      * @return array
      */
     public function fetchRow($model = 'PDO::FETCH_ASSOC') {
 
-        return $this->_dbLink->fetchRow($model);
+        return $this->_dbConnection->fetchRow($model);
     }
 
     /**
      * 获取查询信息的全部数据
      *
-     * 注：本函数（类方法）需与query()组合使用。
+     * 注:本函数（类方法）需与query()组合使用。
      *
      * @access public
      *
-     * @param string $model 返回数据的索引类型：字段型/数据型 等。默认：字段型
+     * @param string $model 返回数据的索引类型:字段型/数据型 等。默认:字段型
      *
      * @return array
      */
     public function fetchAll($model = 'PDO::FETCH_ASSOC') {
 
-        return $this->_dbLink->fetchAll($model);
+        return $this->_dbConnection->fetchAll($model);
     }
 
     /**
@@ -614,7 +614,7 @@ class DbCommand {
      * @access protected
      *
      * @param string $methodName 调用的查询函数名
-     * @param mixed $tableName 所要查询的数据表名。注：本参数支持数组
+     * @param mixed $tableName 所要查询的数据表名。注:本参数支持数组
      * @param mixed $fields 所要查询的数据表字段。默认数据表全部字段
      *
      * @return object
@@ -646,7 +646,7 @@ class DbCommand {
      *
      * @access public
      *
-     * @param mixed $tableName 所要查询的数据表名。注：本参数支持数组
+     * @param mixed $tableName 所要查询的数据表名。注:本参数支持数组
      * @param mixed $fields 所要查询的数据表字段。默认数据表全部字段
      *
      * @return object
@@ -671,14 +671,14 @@ class DbCommand {
     /**
      * 析构方法
      *
-     * 当本类程序运行结束后，用于&quot;打扫战场&quot;，如：清空无效的内存占用等
+     * 当本类程序运行结束后，用于&quot;打扫战场&quot;，如:清空无效的内存占用等
      *
      * @access public
      * @return boolean
      */
     public function __destruct() {
 
-        $this->_dbLink = null;
+        $this->_dbConnection = null;
         $this->_reset();
 
         return true;

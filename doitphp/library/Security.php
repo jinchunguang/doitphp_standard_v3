@@ -8,7 +8,7 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: Security.php 3.0 2014-12-29 15:57:21Z tommy <tommy@doitphp.com> $
+ * @version $Id: Security.php 2.0 2012-12-29 15:57:21Z tommy <tommy@doitphp.com> $
  * @package library
  * @since 1.0
  */

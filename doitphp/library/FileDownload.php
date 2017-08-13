@@ -6,13 +6,18 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: FileDownload.php 3.0 2014-12-23 20:24:43Z tommy <tommy@doitphp.com> $
+ * @version $Id: FileDownload.php 2.0 2012-12-23 20:24:43Z tommy <tommy@doitphp.com> $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
-use doitphp\core\Controller;
+use doitphp\core\Response;
+
+if (!defined('IN_DOIT')) {
+    exit();
+}
+
 class FileDownload {
 
     /**
@@ -22,15 +27,15 @@ class FileDownload {
      *
      * @access public
      *
-     * @param string $file 文件路径
+     * @param string $filePath 文件路径
      * @param string $rename 文件重命名后的名称
      *
      * @return void
      */
-    public static function render($file, $rename = null) {
+    public static function getData($filePath, $rename = null) {
 
         //参数分析
-        if(!$file) {
+        if(!$filePath) {
             return false;
         }
 
@@ -39,24 +44,24 @@ class FileDownload {
         }
 
         //分析文件是否存在
-        if (!is_file($file)) {
-            Controller::showMsg('Error 404:The file not found!');
+        if (!is_file($filePath)) {
+            Response::showMsg('Error 404:The file not found!');
         }
 
         //分析文件名
-        $filename = (!$rename) ? basename($file) : $rename;
+        $fileName = (!$rename) ? basename($filePath) : $rename;
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header("Content-Disposition: attachment; filename=\"{$filename}\"");
+        header("Content-Disposition: attachment; filename=\"{$fileName}\"");
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
+        header('Content-Length: ' . filesize($filePath));
         ob_clean();
         flush();
 
-        readfile($file);
+        readfile($filePath);
 
         exit();
     }

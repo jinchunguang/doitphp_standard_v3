@@ -6,16 +6,20 @@
  * @link http://www.doitphp.com
  * @copyright Copyright (C) 2015 www.doitphp.com All rights reserved.
  * @license New BSD License.{@link http://www.opensource.org/licenses/bsd-license.php}
- * @version $Id: FileUpload.php 3.0 2014-12-23 22:30:38Z tommy <tommy@doitphp.com> $
+ * @version $Id: FileUpload.php 2.0 2012-12-23 22:30:38Z tommy <tommy@doitphp.com> $
  * @package library
  * @since 1.0
  */
 namespace doitphp\library;
 
+if (!defined('IN_DOIT')) {
+    exit();
+}
+
 class FileUpload {
 
     /**
-     * 文件限制大小（默认：8M）
+     * 文件限制大小（默认:8M）
      *
      * @var integer
      */
@@ -52,7 +56,7 @@ class FileUpload {
      *
      * @return boolean
      */
-    public function render($files, $destFile) {
+    public function moveFile($files, $destFile) {
 
         //参数分析
         if (!$files || !$destFile) {
@@ -80,11 +84,11 @@ class FileUpload {
     }
 
     /**
-     * 设置上传文件的限制格式，即：文件后缀。
+     * 设置上传文件的限制格式，即:文件后缀。
      *
      * @access public
      *
-     * @param array $type 所限制上传文件后缀。注：本参数为数组
+     * @param array $type 所限制上传文件后缀。注:本参数为数组
      *
      * @return object
      */
