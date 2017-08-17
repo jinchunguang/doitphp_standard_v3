@@ -14,8 +14,8 @@
  */
 namespace doitphp\library;
 
-use \MongoException;
-use \Mongo;
+use \MongoClient;
+use \MongoConnectionException;
 use doitphp\core\Configure;
 use doitphp\core\Response;
 use doitphp\core\DoitException;
@@ -77,7 +77,7 @@ class MongoDb {
         //参数分析
         if (!$params || !is_array($params)) {
             //加载数据库配置文件.
-            $params = Configure::get('mongo');
+            $params = Configure::get('mongodb');
         }
 
         $params = is_array($params) ? $params + $this->_defaultConfig : $this->_defaultConfig;
@@ -87,7 +87,7 @@ class MongoDb {
 
         try {
             //实例化mongo
-            $this->_mongo = new Mongo($params['dsn'], $params['option']);
+            $this->_mongo = new MongoClient($params['dsn'], $params['option']);
 
             //连接mongo数据库
             $this->_dbConnection = $this->_mongo->selectDB($params['dbname']);
@@ -98,7 +98,7 @@ class MongoDb {
             }
 
             return true;
-        } catch (MongoException $exception) {
+        } catch (MongoConnectionException $exception) {
 
             //抛出异常信息
             throw new DoitException('MongoDb connect error!<br>' . $exception->getMessage(), $exception->getCode());

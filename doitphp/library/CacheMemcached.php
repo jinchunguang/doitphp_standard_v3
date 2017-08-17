@@ -122,7 +122,7 @@ class CacheMemcached {
 
         //分析memcached扩展模块的加载
         if (!extension_loaded('memcached')) {
-            Response::halt('The memcached extension to be loaded before use!');
+            Response::halt('The memcached extension is not to be loaded before use!');
         }
 
         //获取Memcache服务器连接参数
